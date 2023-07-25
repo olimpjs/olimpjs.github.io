@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Работа с заявкой</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+        }
+        
+        .block {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .options {
+            display: flex;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #45A048;
+        }
+    </style>
+</head>
+<body>
+    <div class="block">
+        <h1>Из лид - формы явный интерес к определенной программе</h1>
+        
+        
+       
+        <div class="options">
+            <button onclick="goToOption1()">Да</button>
+            <button onclick="goToOption2()">Нет</button>
+			<button onclick="goToOption3()">Главная</button>
+        </div>
+    </div>
+    
+    <script>
+        function goToOption1() {
+            // Действия для варианта "Да"
+            // Например, переход к следующему пункту
+            window.location.href = "index_003_DA.html";
+        }
+        
+        function goToOption2() {
+            // Действия для варианта "Нет"
+            // Например, переход к другому пункту
+            window.location.href = "ваша_ссылка_на_пункт2.html";
+        }
+		function goToOption3() {
+            // Действия для варианта "Главная"
+            // Например, переход к другому пункту
+            window.location.href = "index.html";
+        }
+    </script>
+	
+	<h3>Меню</h3>
+<!--Абзац для ссылки на страницу сайта-->
+<p>
+<!--Ссылка на страницу сайта-->
+<a href="">
+<!--Картинка маркера перед названием страницы-->
+
+<!--Название страницы
+style="margin-left:5px;" - отступ названия от маркера-->
+<span style="margin-left:5px;">Страница</span></a>
+<!--Закрываем абзац-->
+</p>
+<p>
+<a href="">
+<span style="margin-left:5px;">Страница 1</span;></a>
+</p>
+<p>
+<a href="">
+
+<span style="margin-left:5px;">Страница 2</span></a>
+</p>
+</body>
