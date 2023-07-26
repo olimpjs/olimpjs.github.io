@@ -15,7 +15,7 @@
         }
         
         .block {
-            max-width: 700px;
+            max-width: 800px;
             margin: 30px auto;
             padding: 20px;
             background-color: #fff;
@@ -52,14 +52,14 @@
 </head>
 <body>
     <div class="block">
-        <h1>Из лид - формы</h1>
-		<h1>явный интерес к определенной программе</h1>
-        
-        
-       
+        <div class="question">Программа может длиться 2 или 8 дней.</div> 
+		<div class="question"> Но даже если вы запишитесь на двухдневную, вы сможете продлить её при желании или необходимости.</div>  
+		<div class="question"> Разницы в услугах нет. На сколько дней для вас подобрать программу?</div>  
+       <div class="question"> У нас есть тарифы комфорт и премиум. Во второй входит больше услуг, и интенсивность занятий выше, поэтому результат будет лучше, но и в комфорт тоже входят необходимые процедуры. </div>  
+	   <div class="question">Про какой из тарифов вам рассказать? </div> 
         <div class="options">
-            <button onclick="goToOption1()">Да</button>
-            <button onclick="goToOption2()">Нет</button>
+            <button onclick="goToOption1()">Комфорт</button>
+			<button onclick="goToOption2()">Премиум</button>
 			<button onclick="goToOption3()">Главная</button>
         </div>
     </div>
@@ -68,13 +68,13 @@
         function goToOption1() {
             // Действия для варианта "Да"
             // Например, переход к следующему пункту
-            window.location.href = "index_003_DA.html";
+            window.location.href = "index_spisok_programm_komfort.html";
         }
         
         function goToOption2() {
             // Действия для варианта "Нет"
             // Например, переход к другому пункту
-            window.location.href = "index_003_Net.html";
+            window.location.href = "index_spisok_programm_premium.html";
         }
 		function goToOption3() {
             // Действия для варианта "Главная"
@@ -82,4 +82,3 @@
             window.location.href = "index.html";
         }
     </script>
-	

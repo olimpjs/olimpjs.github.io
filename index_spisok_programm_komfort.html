@@ -1,0 +1,339 @@
+<!-- HTML модального окна -->
+<body>
+
+
+ <h1>Комфорт</h1>
+
+ <div class="options">
+
+ <!-- HTML модального окна1 -->
+<div id="openModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Общеоздоровительная</h3>
+        <a href="#close" title="Close" class="close">×</a>
+      </div>
+      <div class="modal-body">    
+        <ul>
+ <li>В тариф комфорт входят консультация физиотерапевта, озонотерапевта, ТЭС - терапия, оздоровительная капельница, хвойная ванна, циркулярный душ, грязевое обертывание.</li>
+ <li>Все процедуры проводят наши специалисты в центре на Моисеева 2/2, прямо за цирком.</li>
+ <li>Стоимость программы на *кол - во дней* составит *Сумма*</li>
+ <li>Подберем для вас подходящее время?</li>
+ </ul>
+      </div>
+    </div>
+  </div>
+</div> 
+<!-- HTML кнопки -->
+  <div class="block"> 
+ <button onclick="goToOption1()"><a href="#openModal">Общеоздоровительная</a></button>
+
+ 
+ 
+ 
+ 
+ <!-- HTML модального окна2 -->
+<div id="openModal2" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Кардио - респираторная</h3>
+        <a href="#close" title="Close" class="close">×</a>
+      </div>
+      <div class="modal-body">    
+        <ul>
+ <li>Тут будет охуительный текст</li>
+
+ </ul>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- HTML кнопки -->
+ <button onclick="goToOption1()"><a href="#openModal2">Кардио - респираторная</a></button>
+ 
+ 
+  <!-- HTML модального окна3 -->
+<div id="openModal3" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Силуэт</h3>
+        <a href="#close" title="Close" class="close">×</a>
+      </div>
+      <div class="modal-body">    
+        <ul>
+ <li>Тут будет охуительный текст</li>
+
+ </ul>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- HTML кнопки -->
+ <button onclick="goToOption1()"><a href="#openModal3">Силуэт</a></button>
+ 
+  <!-- HTML модального окна4 -->
+<div id="openModal4" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Здоровый позвоночник</h3>
+        <a href="#close" title="Close" class="close">×</a>
+      </div>
+      <div class="modal-body">    
+        <ul>
+ <li>Тут будет охуительный текст</li>
+
+ </ul>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- HTML кнопки -->
+ <button onclick="goToOption1()"><a href="#openModal4">Здоровый позвоночник</a></button>
+ 
+ 
+   <!-- HTML модального окна5 -->
+<div id="openModal5" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Здоровые суставы</h3>
+        <a href="#close" title="Close" class="close">×</a>
+      </div>
+      <div class="modal-body">    
+        <ul>
+ <li>Тут будет охуительный текст</li>
+
+ </ul>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- HTML кнопки -->
+ <button onclick="goToOption1()"><a href="#openModal5">Здоровые суставы</a></button>
+<!-- CSS-стили модального окна -->
+
+<!-- HTML модального окнаSOGL -->
+<div id="openModalSOGL" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Согласен</h3>
+        <a href="#close" title="Close" class="close">×</a>
+      </div>
+      <div class="modal-body">    
+        <ul>
+ <li>Перезвонить на следующий день </li>
+
+ </ul>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- HTML кнопки -->
+ 
+<!-- CSS-стили модального окна -->
+
+
+<div class="block">
+<div class="options">
+            <button onclick="goToOption66()"><a href="#openModalSOGL">Согласен</a></button>
+			<button onclick="goToOption22()">Не согласен</button>
+			<button onclick="goToOption33()">Премиум</button>
+			<button onclick="goToOption44()">Главная</button>
+        </div>
+    </div>
+    
+  <script>
+        function goToOption11() {
+            // Действия для варианта "Согласен"
+            // Например, переход к следующему пункту
+            window.location.href = openModalSOGL;
+        }
+        
+        function goToOption22() {
+            // Действия для варианта "Не согласен"
+            // Например, переход к другому пункту
+            window.location.href = "ваша_ссылка_на_пункт2.html";
+        }
+		function goToOption33() {
+            // Действия для варианта "Премиум"
+            // Например, переход к другому пункту
+            window.location.href = "index_spisok_programm_premium.html";
+        }
+		function goToOption44() {
+            // Действия для варианта "Главная"
+            // Например, переход к другому пункту
+            window.location.href = "index.html";
+        }
+    </script>
+<style>
+/* Стили всплывающего окна по-умолчанию */
+.modal {
+    position: fixed; /* фиксированное положение */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.5); /* фон */
+    z-index: 1050;
+    opacity: 0; /* по умолчанию модальное окно прозрачно */
+    -webkit-transition: opacity 200ms ease-in; 
+    -moz-transition: opacity 200ms ease-in;
+    transition: opacity 200ms ease-in; /* анимация перехода */
+    pointer-events: none; /* элемент невидим для событий мыши */
+    margin: 0;
+    padding: 0;
+}
+/* При отображении модального окно */
+.modal:target {
+    opacity: 1; /* делаем окно видимым */
+   pointer-events: auto; /* элемент видим для событий мыши */
+    overflow-y: auto; /* добавляем прокрутку по y, когда элемент не помещается на страницу */
+}
+/* ширина модального окна и его отступы от экрана */
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 10px;
+}
+@media (min-width: 576px) {
+  .modal-dialog {
+      max-width: 500px;
+      margin: 30px auto; /* отображение окна по центру */
+  }
+}
+/* Стили для блока с контентом окна */ 
+.modal-content {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: .3rem;
+    outline: 0;
+}
+@media (min-width: 768px) {
+  .modal-content {
+      -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+      box-shadow: 0 5px 15px rgba(0,0,0,.5);
+  }
+}
+/* Стили заголовка окна */
+.modal-header {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 15px;
+    border-bottom: 1px solid #eceeef;
+}
+.modal-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 1.5;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+/* Стили кнопки "х" ("Закрыть")  */
+.close {
+    float: right;
+    font-family: sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .5;
+    text-decoration: none;
+}
+/* Стили для закрывающей кнопки в фокусе или наведении */
+.close:focus, .close:hover {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: .75;
+}
+/* Стили блока основного содержимого окна */
+.modal-body {
+  position: relative;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 15px;
+    overflow: auto;
+}
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+        }
+        
+        .block {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .options {
+            display: flex;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #45A048;
+        }
+</style>
+
