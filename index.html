@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Планер</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+  }
+  header {
+    display: flex;
+    background: #2c3e50;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header button {
+    flex: 1;
+    padding: 1em;
+    background: #34495e;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 1em;
+  }
+  header button:hover {
+    background: #2980b9;
+  }
+  header button.active {
+    background: #3498db;
+  }
+  main {
+    padding: 1em;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .hidden {
+    display: none;
+  }
+  /* Общие стили календаря */
+  .calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  .day {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    min-height: 100px;
+    position: relative;
+    border-radius: 4px;
+    background: #f9f9f9;
+    transition: background 0.2s;
+  }
+  .day:hover {
+    background: #e8f4fc;
+  }
+  .day.has-task {
+    border-color: #3498db;
+    background: #e8f4fc;
+  }
+  .day.today {
+    background: #fffacd;
+    border: 2px solid #ffd700;
+  }
+  .task-label {
+    display: block;
+    margin-top: 5px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    color: white;
+    margin-bottom: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .task-yellow {
+    background: #f1c40f;
+  }
+  .task-green {
+    background: #27ae60;
+  }
+  .task-red {
+    background: #e74c3c;
+  }
+  .create-task-btn {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 0.7em;
+    cursor: pointer;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    transition: background 0.2s;
+  }
+  .create-task-btn:hover {
+    background: #2980b9;
+  }
+  /* Модальное окно */
+  .modal-overlay.hidden {
+    display: none;
+  }
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 350px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+  .modal h2 {
+    margin-top: 0;
+    color: #2c3e50;
+  }
+  .modal label {
+    display: block;
+    margin-top: 10px;
+    color: #2c3e50;
+    font-weight: bold;
+  }
+  .modal input[type=text], .modal select, .modal textarea, .modal input[type=time] {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 5px;
+    font-size: 1em;
+  }
+  .modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 1em;
+  }
+  .btn-save {
+    background: #27ae60;
+    color: white;
+  }
+  .btn-save:hover {
+    background: #219653;
+  }
+  .btn-cancel {
+    background: #e74c3c;
+    color: white;
+  }
+  .btn-cancel:hover {
+    background: #c0392b;
+  }
+  /* Таблица месяца */
+  .month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+  .month-day {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    min-height: 80px;
+    position: relative;
+    border-radius: 4px;
+    background: #f9f9f9;
+    transition: background 0.2s;
+  }
+  .month-day:hover {
+    background: #e8f4fc;
+  }
+  /* Таблица года */
+  .year-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+  .year-month {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    border-radius: 4px;
+    background: #f9f9f9;
+  }
+  .year-month-name {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #2c3e50;
+  }
+  .year-month-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  .year-day {
+    border: 1px solid #eee;
+    font-size: 0.7em;
+    text-align: center;
+    padding: 5px;
+    position: relative;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .year-day:hover {
+    background: #e8f4fc;
+  }
+  .year-day.has-task {
+    border-color: #3498db;
+    background: #e8f4fc;
+  }
+  .task-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+  }
+  .task-actions button {
+    padding: 3px 8px;
+    font-size: 0.7em;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+    transition: background 0.2s;
+  }
+  .edit-btn {
+    background: #3498db;
+    color: white;
+  }
+  .edit-btn:hover {
+    background: #2980b9;
+  }
+  .delete-btn {
+    background: #e74c3c;
+    color: white;
+  }
+  .delete-btn:hover {
+    background: #c0392b;
+  }
+  .week-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .clock {
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #2c3e50;
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    border-radius: 4px;
+    background: #f9f9f9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+ 
+  
+</style>
+</head>
+<body>
+
+<header>
+  <button id="tab-week" class="active">Неделя</button>
+  <button id="tab-month">Месяц</button>
+  <button id="tab-year">Год</button>
+</header>
+
+<main>
+  <div class="clock" id="clock">Текущее время в Москве: <span id="moscow-time"></span></div>
+  <section id="view-week"></section>
+  <section id="view-month" class="hidden"></section>
+  <section id="view-year" class="hidden"></section>
+</main>
+
+<!-- Модальное окно -->
+<div id="modal" class="modal-overlay hidden" tabindex="-1">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <h2 id="modal-title">Создать задачу</h2>
+    <form id="task-form">
+      <label>
+        Название задачи
+        <input type="text" id="task-title" required />
+      </label>
+      <label>
+        Дата
+        <select id="task-date" required></select>
+      </label>
+      <label>
+        Время
+        <div>
+          <button type="button" id="time-toggle" data-mode="start">Начало</button>
+        </div>
+        <input type="time" id="task-time-start" />
+        <input type="time" id="task-time-end" class="hidden" />
+      </label>
+      <label>
+        Цвет метки
+        <select id="task-color" required>
+          <option value="yellow">Желтый</option>
+          <option value="green">Зеленый</option>
+          <option value="red">Красный</option>
+        </select>
+      </label>
+      <label>
+        Описание
+        <textarea id="task-desc" rows="3"></textarea>
+      </label>
+      <div class="modal-buttons">
+        <button type="submit" class="btn btn-save">Сохранить</button>
+        <button type="button" id="btn-cancel" class="btn btn-cancel">Отмена</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// === Модель данных ===
+const STORAGE_KEY = 'plannerTasks';
+
+let tasks = {}; // { 'YYYY-MM-DD': [task, ...] }
+
+function loadTasks() {
+  const data = localStorage.getItem(STORAGE_KEY);
+  tasks = data ? JSON.parse(data) : {};
+}
+
+function saveTasks() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+function addTask(task) {
+  if (!tasks[task.date]) tasks[task.date] = [];
+  tasks[task.date].push(task);
+  saveTasks();
+}
+
+function updateTask(task) {
+  if (!tasks[task.date]) return;
+  const idx = tasks[task.date].findIndex(t => t.id === task.id);
+  if (idx !== -1) {
+    tasks[task.date][idx] = task;
+    saveTasks();
+  }
+}
+
+function deleteTask(taskId, taskDate) {
+  if (!tasks[taskDate]) return;
+  tasks[taskDate] = tasks[taskDate].filter(t => t.id !== taskId);
+  if (tasks[taskDate].length === 0) delete tasks[taskDate];
+  saveTasks();
+}
+
+function generateId() {
+  return 'task-' + Math.random().toString(36).substr(2, 9);
+}
+
+// === Вспомогательные функции ===
+
+function formatDate(date) {
+  return date.toISOString().split('T')[0];
+}
+
+function parseDate(str) {
+  return new Date(str + 'T00:00:00');
+}
+
+function getWeekStart(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = (day === 0 ? -6 : 1) - day; // Понедельник - начало недели
+  d.setDate(d.getDate() + diff);
+  return d;
+}
+
+function addDays(date, days) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+function getWeekDates(date) {
+  const start = getWeekStart(date);
+  let dates = [];
+  for (let i=0; i<7; i++) {
+    dates.push(addDays(start, i));
+  }
+  return dates;
+}
+
+function getMonthDates(year, month) {
+  // month: 0-11
+  const dates = [];
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const firstWeekDay = firstDay.getDay() || 7; // сдвиг, чтобы понедельник был 1
+  // Добавим пустые дни перед первым числом месяца, чтобы сетка ровная
+  for(let i=1; i<firstWeekDay; i++) {
+    dates.push(null);
+  }
+  for(let d=1; d<=lastDay.getDate(); d++) {
+    dates.push(new Date(year, month, d));
+  }
+  return dates;
+}
+
+function getYearMonths(year) {
+  const months = [];
+  for(let m=0; m<12; m++) {
+    months.push({
+      month: m,
+      dates: getMonthDates(year, m)
+    });
+  }
+  return months;
+}
+
+// === Рендеринг ===
+
+const viewWeek = document.getElementById('view-week');
+const viewMonth = document.getElementById('view-month');
+const viewYear = document.getElementById('view-year');
+
+let currentDate = new Date(); // Текущая дата для отображения
+
+function clearElement(el) {
+  while(el.firstChild) el.removeChild(el.firstChild);
+}
+
+function renderWeek() {
+  clearElement(viewWeek);
+  const year = currentDate.getFullYear();
+  const container = document.createElement('div');
+
+  // Начнем с первой недели года
+  let date = new Date(year, 0, 1);
+  const endDate = new Date(year + 1, 0, 1);
+  const today = new Date();
+
+  while (date < endDate) {
+    const weekRow = document.createElement('div');
+    weekRow.className = 'week-row';
+
+    const weekDates = getWeekDates(date);
+    weekDates.forEach(day => {
+      const dayDiv = document.createElement('div');
+      dayDiv.className = 'day';
+      const dayStr = day.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'numeric' });
+      dayDiv.innerHTML = `<strong>${dayStr}</strong>`;
+      const dayKey = formatDate(day);
+      if (tasks[dayKey]) {
+        dayDiv.classList.add('has-task');
+        tasks[dayKey].forEach(task => {
+          const taskDiv = document.createElement('div');
+          taskDiv.className = 'task-label task-' + task.color;
+          taskDiv.innerHTML = `
+            <span>${task.title}</span>
+            <div class="task-actions">
+              <button class="edit-btn" data-id="${task.id}" data-date="${task.date}">Ред.</button>
+              <button class="delete-btn" data-id="${task.id}" data-date="${task.date}">Уд.</button>
+            </div>
+          `;
+          dayDiv.appendChild(taskDiv);
+        });
+      }
+      // Подсветка сегодняшнего дня
+      if (formatDate(day) === formatDate(today)) {
+        dayDiv.classList.add('today');
+      }
+      // Кнопка создания задачи
+      const btn = document.createElement('button');
+      btn.textContent = '+';
+      btn.title = 'Создать задачу';
+      btn.className = 'create-task-btn';
+      btn.addEventListener('click', () => openModal(dayKey));
+      dayDiv.appendChild(btn);
+
+      weekRow.appendChild(dayDiv);
+    });
+
+    container.appendChild(weekRow);
+    date.setDate(date.getDate() + 7); // Переходим к следующей неделе
+  }
+
+  viewWeek.appendChild(container);
+}
+
+function renderMonth() {
+  clearElement(viewMonth);
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const dates = getMonthDates(year, month);
+  const container = document.createElement('div');
+  container.className = 'calendar';
+  // Заголовки дней недели
+  ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].forEach(d => {
+    const hd = document.createElement('div');
+    hd.style.fontWeight = 'bold';
+    hd.textContent = d;
+    container.appendChild(hd);
+  });
+  dates.forEach(date => {
+    const dayDiv = document.createElement('div');
+    dayDiv.className = 'day';
+    if (!date) {
+      dayDiv.textContent = '';
+    } else {
+      const dayNum = date.getDate();
+      dayDiv.textContent = dayNum;
+      const dayKey = formatDate(date);
+      if (tasks[dayKey]) {
+        dayDiv.classList.add('has-task');
+        tasks[dayKey].forEach(task => {
+          const taskDiv = document.createElement('div');
+          taskDiv.className = 'task-label task-' + task.color;
+          taskDiv.innerHTML = `
+            <span>${task.title}</span>
+            <div class="task-actions">
+              <button class="edit-btn" data-id="${task.id}" data-date="${task.date}">Ред.</button>
+              <button class="delete-btn" data-id="${task.id}" data-date="${task.date}">Уд.</button>
+            </div>
+          `;
+          dayDiv.appendChild(taskDiv);
+        });
+      }
+      // Подсветка сегодняшнего дня
+      const today = new Date();
+      if (formatDate(date) === formatDate(today)) {
+        dayDiv.classList.add('today');
+      }
+    }
+    container.appendChild(dayDiv);
+  });
+  viewMonth.appendChild(container);
+}
+
+function renderYear() {
+  clearElement(viewYear);
+  const year = currentDate.getFullYear();
+  const months = getYearMonths(year);
+  const container = document.createElement('div');
+  container.className = 'year-grid';
+  months.forEach(({month, dates}) => {
+    const monthDiv = document.createElement('div');
+    monthDiv.className = 'year-month';
+
+    const monthName = new Date(year, month).toLocaleString('ru-RU', { month: 'long' });
+    const title = document.createElement('div');
+    title.className = 'year-month-name';
+    title.textContent = monthName;
+    monthDiv.appendChild(title);
+
+    const daysGrid = document.createElement('div');
+    daysGrid.className = 'year-month-days';
+
+    // Заголовки дней недели
+    ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].forEach(d => {
+      const hd = document.createElement('div');
+      hd.style.fontWeight = 'bold';
+      hd.style.fontSize = '0.6em';
+      hd.textContent = d;
+      daysGrid.appendChild(hd);
+    });
+
+    dates.forEach(date => {
+      const dayDiv = document.createElement('div');
+      dayDiv.className = 'year-day';
+      if (!date) {
+        dayDiv.textContent = '';
+      } else {
+        const dayNum = date.getDate();
+        dayDiv.textContent = dayNum;
+        const dayKey = formatDate(date);
+        if (tasks[dayKey]) {
+          dayDiv.classList.add('has-task');
+          // Можно добавить цветные точки или метки
+          const dots = document.createElement('div');
+          dots.style.position = 'absolute';
+          dots.style.bottom = '2px';
+          dots.style.left = '2px';
+          dots.style.display = 'flex';
+          dots.style.gap = '2px';
+          tasks[dayKey].forEach(task => {
+            const dot = document.createElement('span');
+            dot.style.width = '6px';
+            dot.style.height = '6px';
+            dot.style.borderRadius = '50%';
+            dot.style.backgroundColor = task.color;
+            dots.appendChild(dot);
+          });
+          dayDiv.appendChild(dots);
+        }
+        // Подсветка сегодняшнего дня
+        const today = new Date();
+        if (formatDate(date) === formatDate(today)) {
+          dayDiv.classList.add('today');
+        }
+        dayDiv.addEventListener('click', () => openModal(dayKey));
+      }
+      daysGrid.appendChild(dayDiv);
+    });
+
+    monthDiv.appendChild(daysGrid);
+    container.appendChild(monthDiv);
+  });
+  viewYear.appendChild(container);
+}
+
+// === Модальное окно ===
+
+const modal = document.getElementById('modal');
+const form = document.getElementById('task-form');
+const inputTitle = document.getElementById('task-title');
+const selectDate = document.getElementById('task-date');
+const inputTimeStart = document.getElementById('task-time-start');
+const inputTimeEnd = document.getElementById('task-time-end');
+const timeToggleBtn = document.getElementById('time-toggle');
+const selectColor = document.getElementById('task-color');
+const textareaDesc = document.getElementById('task-desc');
+const btnCancel = document.getElementById('btn-cancel');
+
+let editingTask = null;
+
+function openModal(dateStr) {
+  editingTask = null;
+  modal.classList.remove('hidden');
+  inputTitle.value = '';
+  textareaDesc.value = '';
+  selectColor.value = 'yellow';
+  inputTimeStart.value = '';
+  inputTimeEnd.value = '';
+  timeToggleBtn.dataset.mode = 'start';
+  inputTimeEnd.classList.add('hidden');
+  populateDateOptions(dateStr);
+  selectDate.value = dateStr;
+  inputTitle.focus();
+}
+
+function populateDateOptions(selected) {
+  selectDate.innerHTML = '';
+  // Покажем даты текущего месяца +/- 7 дней для выбора
+  const baseDate = parseDate(selected);
+  for(let i=-7; i<=7; i++) {
+    const d = addDays(baseDate, i);
+    const opt = document.createElement('option');
+    opt.value = formatDate(d);
+    opt.textContent = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'numeric', year: 'numeric' });
+    selectDate.appendChild(opt);
+  }
+}
+
+function closeModal() {
+  modal.classList.add('hidden');
+  editingTask = null;
+}
+
+// Переключение времени между режимами "начало" и "от и до"
+timeToggleBtn.addEventListener('click', () => {
+  if (timeToggleBtn.dataset.mode === 'start') {
+    timeToggleBtn.dataset.mode = 'range';
+    timeToggleBtn.textContent = 'От и до';
+    inputTimeEnd.classList.remove('hidden');
+  } else {
+    timeToggleBtn.dataset.mode = 'start';
+    timeToggleBtn.textContent = 'Начало';
+    inputTimeEnd.classList.add('hidden');
+    inputTimeEnd.value = '';
+  }
+});
+
+btnCancel.addEventListener('click', e => {
+  e.preventDefault();
+  closeModal();
+});
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const title = inputTitle.value.trim();
+  if (!title) return alert('Введите название задачи');
+  const date = selectDate.value;
+  const color = selectColor.value;
+  const description = textareaDesc.value.trim();
+  let start = inputTimeStart.value || null;
+  let end = inputTimeEnd.value || null;
+
+  if (timeToggleBtn.dataset.mode === 'start') {
+    end = null;
+  } else {
+    if (start && end && end < start) {
+      alert('Время окончания не может быть раньше начала');
+      return;
+    }
+  }
+
+  if (editingTask) {
+    // Обновляем задачу
+    const oldDate = editingTask.date;
+    if (oldDate !== date) {
+      // Удаляем из старой даты
+      tasks[oldDate] = tasks[oldDate].filter(t => t.id !== editingTask.id);
+      if (tasks[oldDate].length === 0) delete tasks[oldDate];
+    }
+    editingTask.title = title;
+    editingTask.date = date;
+    editingTask.color = color;
+    editingTask.description = description;
+    editingTask.time = { start, end };
+    addOrUpdateTask(editingTask);
+  } else {
+    // Новая задача
+    const task = {
+      id: generateId(),
+      title,
+      date,
+      color,
+      description,
+      time: { start, end }
+    };
+    addTask(task);
+  }
+  closeModal();
+  renderAll(); // Обновляем отображение календаря
+});
+
+function addOrUpdateTask(task) {
+  if (!tasks[task.date]) tasks[task.date] = [];
+  const idx = tasks[task.date].findIndex(t => t.id === task.id);
+  if (idx !== -1) {
+    tasks[task.date][idx] = task;
+  } else {
+    tasks[task.date].push(task);
+  }
+  saveTasks();
+}
+
+modal.addEventListener('click', e => {
+  if (e.target === modal) closeModal();
+});
+
+// === Переключение вкладок ===
+
+const tabWeek = document.getElementById('tab-week');
+const tabMonth = document.getElementById('tab-month');
+const tabYear = document.getElementById('tab-year');
+
+function switchTab(tab) {
+  tabWeek.classList.remove('active');
+  tabMonth.classList.remove('active');
+  tabYear.classList.remove('active');
+
+  viewWeek.classList.add('hidden');
+  viewMonth.classList.add('hidden');
+  viewYear.classList.add('hidden');
+
+  if (tab === 'week') {
+    tabWeek.classList.add('active');
+    viewWeek.classList.remove('hidden');
+  } else if (tab === 'month') {
+    tabMonth.classList.add('active');
+    viewMonth.classList.remove('hidden');
+  } else if (tab === 'year') {
+    tabYear.classList.add('active');
+    viewYear.classList.remove('hidden');
+  }
+  renderAll();
+}
+
+tabWeek.addEventListener('click', () => switchTab('week'));
+tabMonth.addEventListener('click', () => switchTab('month'));
+tabYear.addEventListener('click', () => switchTab('year'));
+
+// === Общий рендер ===
+
+function renderAll() {
+  renderWeek();
+  renderMonth();
+  renderYear();
+}
+
+// === Инициализация ===
+
+loadTasks();
+switchTab('week');
+
+// Обработчики событий для редактирования и удаления задач
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('edit-btn')) {
+    const taskId = e.target.getAttribute('data-id');
+    const taskDate = e.target.getAttribute('data-date');
+    const task = tasks[taskDate].find(t => t.id === taskId);
+    if (task) {
+      editingTask = task;
+      openModal(taskDate);
+      inputTitle.value = task.title;
+      textareaDesc.value = task.description;
+      selectColor.value = task.color;
+      if (task.time.start) inputTimeStart.value = task.time.start;
+      if (task.time.end) {
+        timeToggleBtn.dataset.mode = 'range';
+        timeToggleBtn.textContent = 'От и до';
+        inputTimeEnd.classList.remove('hidden');
+        inputTimeEnd.value = task.time.end;
+      }
+    }
+  } else if (e.target.classList.contains('delete-btn')) {
+    const taskId = e.target.getAttribute('data-id');
+    const taskDate = e.target.getAttribute('data-date');
+    if (confirm('Вы уверены, что хотите удалить эту задачу?')) {
+      deleteTask(taskId, taskDate);
+      renderAll();
+    }
+  }
+});
+
+// Обновление времени в Москве
+function updateMoscowTime() {
+  const now = new Date();
+  const options = {
+    timeZone: 'Europe/Moscow',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  };
+  const moscowTime = now.toLocaleTimeString('ru-RU', options);
+  document.getElementById('moscow-time').textContent = moscowTime;
+}
+
+// Обновляем время каждую секунду
+setInterval(updateMoscowTime, 1000);
+updateMoscowTime();
+
+</script>
+</body>
+</html>
